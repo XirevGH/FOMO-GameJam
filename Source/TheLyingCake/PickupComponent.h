@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class THELYINGCAKE_API UPickupComponent : public USphereComponent
 {
 	GENERATED_BODY()

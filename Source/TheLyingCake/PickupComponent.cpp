@@ -23,7 +23,7 @@ void UPickupComponent::OnPickup(UPrimitiveComponent* OverlappedComponent, AActor
 	if (OtherActor && OtherActor->IsA(AActor::StaticClass()))
 	{
 		ApplyEffectToActor(OtherActor);
-		UE_LOG(LogTemp, Warning, TEXT("Player picked up the item %s"), *OtherActor->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("Player, %s, picked up the item "), *OtherActor->GetName());
 		
 	}
 	GetOwner()->Destroy();
