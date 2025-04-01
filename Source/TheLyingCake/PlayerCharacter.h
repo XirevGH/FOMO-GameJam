@@ -18,9 +18,7 @@ UCLASS()
 class THELYINGCAKE_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* RotateRightAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -35,20 +33,26 @@ public:
 
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
-	
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void MoveForward(const FInputActionValue& Value);
-	void RotateRight(const FInputActionValue& Value);
-	void RotateLeft(const FInputActionValue& Value);
-	void RotateAround(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
+	void MoveForward();
+	UFUNCTION(BlueprintCallable)
+	void RotateRight();
+	UFUNCTION(BlueprintCallable)
+	void RotateLeft();
+	UFUNCTION(BlueprintCallable)
+	void RotateAround();
 	
-	void StartRotationTowards(float YawAmount);
+	void StartRotationTowardsDirection(const FVector& DirectionVector, float FallbackYawAmount);
 
-	FRotator TargetVisualRotation;
+	FQuat InitialVisualQuatRotation;
+	FQuat TargetVisualQuatRotation;
+	
 	bool bIsVisualRotating = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float RotationSpeed = 100.f;
@@ -63,6 +67,10 @@ protected:
 	FRotator TargetMoveRotation;
 	bool bIsMoving = false;
 
+	AMovementNode* NextForwardNode = nullptr;
+	FRotator TargetForwardRotation;
+	bool bShouldRotateToForwardNode = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MovementSpeed;
 
@@ -73,6 +81,8 @@ protected:
 	float ForwardVectorMatchThreshold = 0.707f; 
 	
 	AMovementNode* FindNearestMovementNode() const;
+
+	AMovementNode* FindBestNodeInDirection(const FVector& DirectionVector, float MinimumDotProduct) const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
