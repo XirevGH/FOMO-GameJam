@@ -9,44 +9,41 @@
 APlayerCharacter::APlayerCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
-    {
-        GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-        
-        FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-        FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-        FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
-        FirstPersonCameraComponent->bUsePawnControlRotation = true;
-        
-        Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-        Mesh1P->SetOnlyOwnerSee(true);
-        Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-        Mesh1P->bCastDynamicShadow = false;
-        Mesh1P->CastShadow = false;
-        Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-        
-        MovementSpeed = 8.0f;
-        RotationSpeed = 8.0f;
-        NodeReachedThreshold = .05f;
-        ForwardVectorMatchThreshold = 0.707f;
+    
+    GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+    
+    FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+    FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
+    FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
+    FirstPersonCameraComponent->bUsePawnControlRotation = true;
+    
+    Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+    Mesh1P->SetOnlyOwnerSee(true);
+    Mesh1P->SetupAttachment(FirstPersonCameraComponent);
+    Mesh1P->bCastDynamicShadow = false;
+    Mesh1P->CastShadow = false;
+    Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+    
+    MovementSpeed = 8.0f;
+    RotationSpeed = 8.0f;
+    NodeReachedThreshold = .05f;
+    ForwardVectorMatchThreshold = 0.707f;
 
-        CurrentNode = nullptr;
-        TargetNode = nullptr;
-        bIsMoving = false;
-        bIsVisualRotating = false;
-    }
+    CurrentNode = nullptr;
+    TargetNode = nullptr;
+    bIsMoving = false;
+    bIsVisualRotating = false;
+
+    UE_LOG(LogTemp, Warning, TEXT("Character Constructor Called"));
+    
 }
 
 void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
     
-    if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-    {
-        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-        {
-            Subsystem->AddMappingContext(DefaultMappingContext, 0);
-        }
-    }
+    UE_LOG(LogTemp, Warning, TEXT("Character BeginPlay Called"));
+   
     CurrentNode = FindNearestMovementNode();
     if (CurrentNode)
     {
@@ -181,9 +178,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     }
 }
 
-void APlayerCharacter::MoveForward(const FInputActionValue& Value)
+void APlayerCharacter::MoveForward()
 {
-    if (!Value.Get<bool>() || bIsMoving || bIsVisualRotating || !CurrentNode)
+    if (bIsMoving || bIsVisualRotating || !CurrentNode)
     {
         return;
     }
@@ -257,25 +254,25 @@ void APlayerCharacter::StartRotationTowards(float YawAmount)
            *TargetVisualQuatRotation.Rotator().ToString());
 }
 
-void APlayerCharacter::RotateRight(const FInputActionValue& Value)
+void APlayerCharacter::RotateRight()
 {
-    if (Value.Get<bool>() && !bIsMoving && !bIsVisualRotating)
+    if (!bIsMoving && !bIsVisualRotating)
     {
         StartRotationTowards(90.0f);
     }
 }
 
-void APlayerCharacter::RotateLeft(const FInputActionValue& Value)
+void APlayerCharacter::RotateLeft()
 {
-    if (Value.Get<bool>() && !bIsMoving && !bIsVisualRotating)
+    if (!bIsMoving && !bIsVisualRotating)
     {
         StartRotationTowards(-90.0f);
     }
 }
 
-void APlayerCharacter::RotateAround(const FInputActionValue& Value)
+void APlayerCharacter::RotateAround()
 {
-    if (Value.Get<bool>() && !bIsMoving && !bIsVisualRotating)
+    if (!bIsMoving && !bIsVisualRotating)
     {
         StartRotationTowards(180.0f);
     }

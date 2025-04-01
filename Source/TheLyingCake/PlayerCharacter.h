@@ -20,7 +20,10 @@ class THELYINGCAKE_API APlayerCharacter : public ACharacter
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
+	UInputMappingContext* IMC_Player1;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext* IMC_Player2;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* RotateRightAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -35,16 +38,20 @@ public:
 
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
-	
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void MoveForward(const FInputActionValue& Value);
-	void RotateRight(const FInputActionValue& Value);
-	void RotateLeft(const FInputActionValue& Value);
-	void RotateAround(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
+	void MoveForward();
+	UFUNCTION(BlueprintCallable)
+	void RotateRight();
+	UFUNCTION(BlueprintCallable)
+	void RotateLeft();
+	UFUNCTION(BlueprintCallable)
+	void RotateAround();
 	
 	void StartRotationTowards(float YawAmount);
 
