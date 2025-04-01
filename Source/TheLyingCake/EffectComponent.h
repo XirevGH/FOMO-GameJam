@@ -19,14 +19,14 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	 float EffectDuration{5};
+	 FTimerHandle EffectTimer;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void ApplyEffect(AActor* Actor);
 private:
-	float EffectDuration{5};
-
-	FTimerHandle EffectTimer;
+	
 	
 };

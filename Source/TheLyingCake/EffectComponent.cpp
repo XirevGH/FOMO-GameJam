@@ -27,10 +27,7 @@ void UEffectComponent::BeginPlay()
 
 void UEffectComponent::ApplyEffect(AActor* Actor)
 {
-	Actor->SetActorRotation(FRotator(0,0,180));
-	UE_LOG(LogTemp, Warning, TEXT("Do stuff to actor"));
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UEffectComponent::DestroyComponent, false);
-	GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+
 }
 
 
