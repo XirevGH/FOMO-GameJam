@@ -7,9 +7,7 @@
 #include "PickupComponent.generated.h"
 
 class UEffectComponent;
-/**
- * 
- */
+
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class THELYINGCAKE_API UPickupComponent : public USphereComponent
 {
