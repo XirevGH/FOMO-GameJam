@@ -12,11 +12,8 @@ class THELYINGCAKE_API AMovementNode : public AActor
 public:	
 	AMovementNode();
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Maze Node")
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Movement Node")
 	TArray<AMovementNode*> ConnectedNodes;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Maze Node")
-	class UBillboardComponent* EditorVisualizer;
 	
 protected:
 	virtual void BeginPlay() override;
