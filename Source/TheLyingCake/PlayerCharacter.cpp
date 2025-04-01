@@ -80,27 +80,20 @@ void APlayerCharacter::Tick(float DeltaTime)
         ElapsedInterpTime += DeltaTime;
         float Alpha = FMath::Clamp(ElapsedInterpTime / TotalInterpDuration, 0.0f, 1.0f);
         Alpha = FMath::InterpEaseInOut(0.0f, 1.f, Alpha, EaseExponentRotation);
-
-        // *** Use Slerp for Quaternions - handles shortest path ***
+        
         FQuat InterpQuat = FQuat::Slerp(InitialVisualQuatRotation, TargetVisualQuatRotation, Alpha);
 
         // Apply rotation
-        FRotator InterpRotation = InterpQuat.Rotator(); // Convert back to Rotator if needed elsewhere, but SetActorRotation takes Quat
+        FRotator InterpRotation = InterpQuat.Rotator();
         SetActorRotation(InterpQuat);
         if (Controller)
         {
-            Controller->SetControlRotation(InterpRotation); // ControlRotation still needs FRotator
+            Controller->SetControlRotation(InterpRotation);
         }
-
-        // UE_LOG(LogTemp, Log, TEXT("Target Rotation: %s"), *TargetVisualQuatRotation.Rotator().ToString());
-        // UE_LOG(LogTemp, Log, TEXT("Interp Rotation: %s"), *InterpRotation.ToString());
-
-        // *** Improved Completion Check using Quaternions ***
-        // Check if Alpha is basically 1.0 OR if Quats are very close
+        
         if (Alpha >= 1.0f || InterpQuat.Equals(TargetVisualQuatRotation, 0.001f))
         {
             bIsVisualRotating = false;
-            // Snap to final rotation
             SetActorRotation(TargetVisualQuatRotation);
             if (Controller)
             {
@@ -110,18 +103,28 @@ void APlayerCharacter::Tick(float DeltaTime)
         }
     }
 
-    if (bIsMoving && TargetNode)
+     if (bIsMoving && TargetNode)
     {
         FVector LocationBeforeInterpolation = GetActorLocation();
         FRotator RotationBeforeInterpolation = GetActorRotation();
 
         ElapsedInterpTime += DeltaTime;
-
         float Alpha = FMath::Clamp(ElapsedInterpTime / TotalInterpDuration, 0.0f, 1.0f);
-        Alpha = FMath::InterpEaseInOut(0.0f, 0.5f, Alpha, EaseExponentLocation);
+        float LocationAlpha = FMath::InterpEaseInOut(0.0f, 0.5f, Alpha, EaseExponentLocation);
+         
+        FVector InterpLocation = FMath::Lerp(LocationBeforeInterpolation, TargetMoveLocation, LocationAlpha);
+         
+        FRotator InterpRotation;
         
-        FVector InterpLocation = FMath::Lerp(LocationBeforeInterpolation, TargetMoveLocation, Alpha);
-        FRotator InterpRotation = FMath::Lerp(RotationBeforeInterpolation, TargetMoveRotation, Alpha);
+        if (bShouldRotateToForwardNode && NextForwardNode)
+        {
+            float RotationBlendFactor = FMath::InterpEaseIn(0.0f, 1.0f, Alpha, 2.0f);
+            InterpRotation = FMath::Lerp(RotationBeforeInterpolation, TargetForwardRotation, RotationBlendFactor);
+        }
+        else
+        {
+            InterpRotation = FMath::Lerp(RotationBeforeInterpolation, TargetMoveRotation, Alpha);
+        }
         
         SetActorLocationAndRotation(InterpLocation, InterpRotation);
         if (Controller)
@@ -133,33 +136,28 @@ void APlayerCharacter::Tick(float DeltaTime)
         float DistSq = FVector::DistSquared(CurrentLocation, TargetMoveLocation);
         float ThresholdSq = FMath::Square(NodeReachedThreshold);
         
-        UE_LOG(LogTemp, Log, TEXT("Tick Move: DeltaT=%.4f | CurrentLoc=%s | TargetLoc=%s | DistSq=%.3f | ThresholdSq=%.3f"),
-               DeltaTime,
-               *CurrentLocation.ToString(),
-               *TargetMoveLocation.ToString(),
-               DistSq,
-               ThresholdSq);
-        
         if (DistSq < ThresholdSq)
         {
-            UE_LOG(LogTemp, Warning, TEXT(">>> Reached Node Threshold! Snapping. Node: %s"), *TargetNode->GetName());
+            FRotator FinalRotation = bShouldRotateToForwardNode ? TargetForwardRotation : TargetMoveRotation;
             
-            SetActorLocationAndRotation(TargetMoveLocation, TargetMoveRotation);
+            SetActorLocationAndRotation(TargetMoveLocation, FinalRotation);
             if (Controller)
             {
-                Controller->SetControlRotation(TargetMoveRotation);
+                Controller->SetControlRotation(FinalRotation);
             }
             
             CurrentNode = TargetNode;
             TargetNode = nullptr;
+            NextForwardNode = nullptr;
+            bShouldRotateToForwardNode = false;
             bIsMoving = false;
-            UE_LOG(LogTemp, Warning, TEXT("Tick Arrival: Setting bIsMoving = FALSE."));
         }
     }
     else if (bIsMoving && !TargetNode)
     {
-        UE_LOG(LogTemp, Error, TEXT("Tick Move: bIsMoving=true but TargetNode is NULL! Stopping movement."));
         bIsMoving = false;
+        bShouldRotateToForwardNode = false;
+        NextForwardNode = nullptr;
     }
 }
 
@@ -203,7 +201,7 @@ void APlayerCharacter::MoveForward()
         DirectionToNode.Normalize();
         float DotProduct = FVector::DotProduct(PlayerForward, DirectionToNode);
 
-         UE_LOG(LogTemp, Verbose, TEXT("  Checking node %s. Direction: %s, Dot: %f"), *ConnectedNode->GetName(), *DirectionToNode.ToString(), DotProduct);
+        UE_LOG(LogTemp, Verbose, TEXT("  Checking node %s. Direction: %s, Dot: %f"), *ConnectedNode->GetName(), *DirectionToNode.ToString(), DotProduct);
         
         if (DotProduct > BestDot && DotProduct >= ForwardVectorMatchThreshold)
         {
@@ -214,11 +212,39 @@ void APlayerCharacter::MoveForward()
     
     if (NextNode)
     {
-         UE_LOG(LogTemp, Log, TEXT("Found forward node: %s (Dot: %f). Starting Movement."), *NextNode->GetName(), BestDot);
+        UE_LOG(LogTemp, Log, TEXT("Found forward node: %s (Dot: %f). Starting Movement."), *NextNode->GetName(), BestDot);
 
         TargetNode = NextNode;
         TargetMoveLocation = TargetNode->GetActorLocation();
-        TargetMoveRotation = (TargetMoveLocation - CurrentLocation).Rotation();
+        
+        FVector DirectionToTarget = TargetMoveLocation - CurrentLocation;
+        TargetMoveRotation = DirectionToTarget.Rotation();
+        
+        NextForwardNode = nullptr;
+        bShouldRotateToForwardNode = false;
+        
+        for (AMovementNode* PotentialForwardNode : TargetNode->ConnectedNodes)
+        {
+            if (!PotentialForwardNode || PotentialForwardNode == CurrentNode) continue;
+            
+            FVector NextNodeDirection = (PotentialForwardNode->GetActorLocation() - TargetNode->GetActorLocation()).GetSafeNormal();
+            FVector MovementDirection = DirectionToTarget.GetSafeNormal();
+            
+            float ForwardDot = FVector::DotProduct(MovementDirection, NextNodeDirection);
+            
+            if (ForwardDot > ForwardVectorMatchThreshold)
+            {
+                NextForwardNode = PotentialForwardNode;
+                
+                FVector DirectionToForwardNode = NextForwardNode->GetActorLocation() - TargetNode->GetActorLocation();
+                TargetForwardRotation = DirectionToForwardNode.Rotation();
+                
+                bShouldRotateToForwardNode = true;
+                
+                UE_LOG(LogTemp, Log, TEXT("Found next forward node: %s (Dot: %f)"), *NextForwardNode->GetName(), ForwardDot);
+                break;
+            }
+        }
 
         ElapsedInterpTime = 0.0f;
         bIsMoving = true;
@@ -230,35 +256,79 @@ void APlayerCharacter::MoveForward()
     }
 }
 
-void APlayerCharacter::StartRotationTowards(float YawAmount)
+AMovementNode* APlayerCharacter::FindBestNodeInDirection(const FVector& DirectionVector, float MinimumDotProduct) const
 {
-    if (bIsMoving || bIsVisualRotating) // Prevent starting new rotation if already rotating
+    if (!CurrentNode) return nullptr;
+    
+    AMovementNode* BestNode = nullptr;
+    float BestDot = MinimumDotProduct;
+    
+    FVector CurrentLocation = GetActorLocation();
+    
+    for (AMovementNode* ConnectedNode : CurrentNode->ConnectedNodes)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Cannot rotate visually: Currently moving or already rotating."));
+        if (!ConnectedNode) continue;
+        
+        FVector DirectionToNode = (ConnectedNode->GetActorLocation() - CurrentLocation);
+        if (DirectionToNode.IsNearlyZero()) continue;
+        
+        DirectionToNode.Normalize();
+        float DotProduct = FVector::DotProduct(DirectionVector, DirectionToNode);
+        
+        UE_LOG(LogTemp, Verbose, TEXT("  Direction check for node %s. Direction: %s, Dot with requested: %f"), 
+               *ConnectedNode->GetName(), *DirectionToNode.ToString(), DotProduct);
+        
+        if (DotProduct > BestDot)
+        {
+            BestDot = DotProduct;
+            BestNode = ConnectedNode;
+        }
+    }
+    
+    return BestNode;
+}
+
+void APlayerCharacter::StartRotationTowardsDirection(const FVector& DirectionVector, float FallbackYawAmount)
+{
+    if (bIsMoving || bIsVisualRotating)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Cannot rotate: Currently moving or already rotating."));
         return;
     }
-
-    InitialVisualQuatRotation = GetActorQuat(); // Store starting orientation
-
-    // Create a delta rotation Quaternion
-    FQuat DeltaQuat = FQuat(FRotator(0.0f, YawAmount, 0.0f));
-
-    // Calculate target orientation
-    TargetVisualQuatRotation = InitialVisualQuatRotation * DeltaQuat;
-    TargetVisualQuatRotation.Normalize(); // Keep it normalized
-
+    
+    InitialVisualQuatRotation = GetActorQuat();
+    
+    AMovementNode* NodeInDirection = FindBestNodeInDirection(DirectionVector, 0.5f);
+    
+    if (NodeInDirection)
+    {
+        FVector DirectionToNode = NodeInDirection->GetActorLocation() - GetActorLocation();
+        FRotator TargetRotation = DirectionToNode.Rotation();
+        
+        TargetVisualQuatRotation = TargetRotation.Quaternion();
+        
+        UE_LOG(LogTemp, Log, TEXT("Rotating towards node: %s at angle: %s"), 
+               *NodeInDirection->GetName(), *TargetRotation.ToString());
+    }
+    else
+    {
+        FQuat DeltaQuat = FQuat(FRotator(0.0f, FallbackYawAmount, 0.0f));
+        TargetVisualQuatRotation = InitialVisualQuatRotation * DeltaQuat;
+        
+        UE_LOG(LogTemp, Log, TEXT("No node found in direction, using fallback rotation of %f degrees"), FallbackYawAmount);
+    }
+    
+    TargetVisualQuatRotation.Normalize();
     ElapsedInterpTime = 0.0f;
     bIsVisualRotating = true;
-    UE_LOG(LogTemp, Log, TEXT("Starting visual rotation from %s towards %s"),
-           *InitialVisualQuatRotation.Rotator().ToString(), // Log Rotator for readability
-           *TargetVisualQuatRotation.Rotator().ToString());
 }
 
 void APlayerCharacter::RotateRight()
 {
     if (!bIsMoving && !bIsVisualRotating)
     {
-        StartRotationTowards(90.0f);
+        FVector RightDirection = GetActorRightVector();
+        StartRotationTowardsDirection(RightDirection, 90.0f);
     }
 }
 
@@ -266,7 +336,8 @@ void APlayerCharacter::RotateLeft()
 {
     if (!bIsMoving && !bIsVisualRotating)
     {
-        StartRotationTowards(-90.0f);
+        FVector LeftDirection = -GetActorRightVector();
+        StartRotationTowardsDirection(LeftDirection, -90.0f);
     }
 }
 
@@ -274,7 +345,8 @@ void APlayerCharacter::RotateAround()
 {
     if (!bIsMoving && !bIsVisualRotating)
     {
-        StartRotationTowards(180.0f);
+        FVector BackDirection = -GetActorForwardVector();
+        StartRotationTowardsDirection(BackDirection, 180.0f);
     }
 }
 

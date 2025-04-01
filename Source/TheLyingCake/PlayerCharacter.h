@@ -48,7 +48,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void RotateAround();
 	
-	void StartRotationTowards(float YawAmount);
+	void StartRotationTowardsDirection(const FVector& DirectionVector, float FallbackYawAmount);
 
 	FQuat InitialVisualQuatRotation;
 	FQuat TargetVisualQuatRotation;
@@ -67,6 +67,10 @@ protected:
 	FRotator TargetMoveRotation;
 	bool bIsMoving = false;
 
+	AMovementNode* NextForwardNode = nullptr;
+	FRotator TargetForwardRotation;
+	bool bShouldRotateToForwardNode = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MovementSpeed;
 
@@ -77,6 +81,8 @@ protected:
 	float ForwardVectorMatchThreshold = 0.707f; 
 	
 	AMovementNode* FindNearestMovementNode() const;
+
+	AMovementNode* FindBestNodeInDirection(const FVector& DirectionVector, float MinimumDotProduct) const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
