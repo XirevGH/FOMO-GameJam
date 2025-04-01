@@ -48,7 +48,9 @@ protected:
 	
 	void StartRotationTowards(float YawAmount);
 
-	FRotator TargetVisualRotation;
+	FQuat InitialVisualQuatRotation;
+	FQuat TargetVisualQuatRotation;
+	
 	bool bIsVisualRotating = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float RotationSpeed = 100.f;

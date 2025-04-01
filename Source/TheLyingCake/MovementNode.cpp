@@ -1,13 +1,8 @@
 #include "MovementNode.h"
-#include "Components/BillboardComponent.h" 
 
 AMovementNode::AMovementNode()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	EditorVisualizer = CreateDefaultSubobject<UBillboardComponent>(TEXT("NodeVisualizer"));
-	RootComponent = EditorVisualizer;
-	
 }
 
 void AMovementNode::BeginPlay()

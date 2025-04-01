@@ -6,9 +6,8 @@
 #include "Components/SphereComponent.h"
 #include "PickupComponent.generated.h"
 
-/**
- * 
- */
+class UEffectComponent;
+
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class THELYINGCAKE_API UPickupComponent : public USphereComponent
 {
@@ -20,5 +19,15 @@ protected:
 	
 private:
 	UFUNCTION()
-	void OnPickup(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnPickup(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess))
+	TSubclassOf<UEffectComponent> EffectClass;
+	
 };
