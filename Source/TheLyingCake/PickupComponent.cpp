@@ -2,6 +2,9 @@
 
 
 #include "PickupComponent.h"
+#include "PlayerCharacter.h"
+#include "EffectComponent.h"
+
 
 void UPickupComponent::BeginPlay()
 {
@@ -13,14 +16,18 @@ void UPickupComponent::BeginPlay()
 
 void UPickupComponent::ApplyEffectToActor(AActor* ActorToApply)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Do stuff to actor, %s"), *ActorToApply->GetName());
+	UEffectComponent* Effect = NewObject<UEffectComponent>(ActorToApply, EffectClass);
+	Effect->RegisterComponent();
+	Effect->ApplyEffect(ActorToApply);
+	
+
 }
 
 
 void UPickupComponent::OnPickup(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor->IsA(AActor::StaticClass()))
+	if (OtherActor && Cast<APlayerCharacter>(OtherActor))
 	{
 		ApplyEffectToActor(OtherActor);
 		UE_LOG(LogTemp, Warning, TEXT("Player, %s, picked up the item "), *OtherActor->GetName());
