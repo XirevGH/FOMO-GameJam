@@ -80,30 +80,36 @@ void APlayerCharacter::Tick(float DeltaTime)
     
     if (bIsVisualRotating)
     {
-        FRotator CurrentRotation = GetActorRotation();
-        
         ElapsedInterpTime += DeltaTime;
-
         float Alpha = FMath::Clamp(ElapsedInterpTime / TotalInterpDuration, 0.0f, 1.0f);
         Alpha = FMath::InterpEaseInOut(0.0f, 1.f, Alpha, EaseExponentRotation);
-        
-        FRotator InterpRotation = FMath::Lerp(CurrentRotation, TargetVisualRotation, Alpha);
-        
-        SetActorRotation(InterpRotation);
+
+        // *** Use Slerp for Quaternions - handles shortest path ***
+        FQuat InterpQuat = FQuat::Slerp(InitialVisualQuatRotation, TargetVisualQuatRotation, Alpha);
+
+        // Apply rotation
+        FRotator InterpRotation = InterpQuat.Rotator(); // Convert back to Rotator if needed elsewhere, but SetActorRotation takes Quat
+        SetActorRotation(InterpQuat);
         if (Controller)
         {
-            Controller->SetControlRotation(InterpRotation);
+            Controller->SetControlRotation(InterpRotation); // ControlRotation still needs FRotator
         }
-        
-        if (FMath::IsNearlyEqual(InterpRotation.Yaw, TargetVisualRotation.Yaw, .05f))
+
+        // UE_LOG(LogTemp, Log, TEXT("Target Rotation: %s"), *TargetVisualQuatRotation.Rotator().ToString());
+        // UE_LOG(LogTemp, Log, TEXT("Interp Rotation: %s"), *InterpRotation.ToString());
+
+        // *** Improved Completion Check using Quaternions ***
+        // Check if Alpha is basically 1.0 OR if Quats are very close
+        if (Alpha >= 1.0f || InterpQuat.Equals(TargetVisualQuatRotation, 0.001f))
         {
-            SetActorRotation(TargetVisualRotation);
+            bIsVisualRotating = false;
+            // Snap to final rotation
+            SetActorRotation(TargetVisualQuatRotation);
             if (Controller)
             {
-                Controller->SetControlRotation(TargetVisualRotation);
+                Controller->SetControlRotation(TargetVisualQuatRotation.Rotator());
             }
-            bIsVisualRotating = false;
-            UE_LOG(LogTemp, Log, TEXT("Visual rotation complete. Yaw: %f"), TargetVisualRotation.Yaw);
+            UE_LOG(LogTemp, Log, TEXT("Visual rotation complete. Final Rotation: %s"), *TargetVisualQuatRotation.Rotator().ToString());
         }
     }
 
@@ -229,17 +235,26 @@ void APlayerCharacter::MoveForward(const FInputActionValue& Value)
 
 void APlayerCharacter::StartRotationTowards(float YawAmount)
 {
-    if (bIsMoving)
+    if (bIsMoving || bIsVisualRotating) // Prevent starting new rotation if already rotating
     {
-        UE_LOG(LogTemp, Warning, TEXT("Cannot rotate visually: Currently moving."));
+        UE_LOG(LogTemp, Warning, TEXT("Cannot rotate visually: Currently moving or already rotating."));
         return;
     }
 
-    FRotator CurrentVisualRotation = GetActorRotation();
-    TargetVisualRotation = FRotator(CurrentVisualRotation.Pitch, FRotator::NormalizeAxis(CurrentVisualRotation.Yaw + YawAmount), CurrentVisualRotation.Roll);
+    InitialVisualQuatRotation = GetActorQuat(); // Store starting orientation
+
+    // Create a delta rotation Quaternion
+    FQuat DeltaQuat = FQuat(FRotator(0.0f, YawAmount, 0.0f));
+
+    // Calculate target orientation
+    TargetVisualQuatRotation = InitialVisualQuatRotation * DeltaQuat;
+    TargetVisualQuatRotation.Normalize(); // Keep it normalized
+
     ElapsedInterpTime = 0.0f;
     bIsVisualRotating = true;
-    UE_LOG(LogTemp, Log, TEXT("Starting visual rotation to Yaw: %f"), TargetVisualRotation.Yaw);
+    UE_LOG(LogTemp, Log, TEXT("Starting visual rotation from %s towards %s"),
+           *InitialVisualQuatRotation.Rotator().ToString(), // Log Rotator for readability
+           *TargetVisualQuatRotation.Rotator().ToString());
 }
 
 void APlayerCharacter::RotateRight(const FInputActionValue& Value)
