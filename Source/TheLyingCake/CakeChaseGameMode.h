@@ -18,9 +18,22 @@ class THELYINGCAKE_API ACakeChaseGameMode : public AGameModeBase
 protected:
 	virtual void BeginPlay() override;
 private:
-	void FindAllMovementNodes();
-	TArray<MovementNode*> MovementNodes;
+	void FindAllMovementNodes() const;
+	TArray<AActor*> MovementNodes;
 
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess), Category="Movement Node")
+	void SpawnCakes();
+	
+	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess))
+	int32 MaximumCakes;
+
+	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess))
+	int32 MinimumCakes;
+
+	int32 CurrentAmountCakes;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category="Cake Spawns")
 	TSubclassOf<AActor> MovementNodeBP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess), Category="Cake Spawns")
+	TSubclassOf<AActor> CakeBP;
 };

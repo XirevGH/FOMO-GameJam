@@ -60,7 +60,7 @@ protected:
 	
 	bool bIsVisualRotating = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float RotationSpeed = 100.f;
+	float RotationSpeed;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Node System")
 	AMovementNode* CurrentNode;
