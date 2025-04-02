@@ -7,22 +7,31 @@
 
 void USlowEffectComponent::ApplyEffect(AActor* Actor)
 {
+	EffectDuration = 5;
 	
 	Super::ApplyEffect(Actor);
-	UE_LOG(LogTemp, Display, TEXT("ApplyEffect: Slow"));
-	APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
-	EffectDuration = 5;
-	//Slow the player
-	Player->SetMovementSpeed(0.1);
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]()
+	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
+	if (Actor != nullptr)
 	{
-		//Player->SetSpeed(Player->StartSpeed);
-		// player effect or sound ?
-		//Player->SetMovementSpeed(0.1);
+		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
+		if (PlayerCharacter != nullptr)
+		{
+			//Slow the player
+			float OriginalSpeed = PlayerCharacter->GetMovementSpeed();
+			PlayerCharacter->SetMovementSpeed(10);
+			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, OriginalSpeed]()
+			{
+				//Player->SetSpeed(Player->StartSpeed);
+				// player effect or sound ?
+				PlayerCharacter->SetMovementSpeed(OriginalSpeed);
 		
-		this->DestroyComponent();
-	});
+				this->DestroyComponent();
+			});
+			GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+		}
+	}
 	
-	GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+	
+	
 	
 }

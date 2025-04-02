@@ -41,12 +41,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsMoving() const { return bIsMoving; }
-
-protected:
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void MoveForward();
 	UFUNCTION(BlueprintCallable)
@@ -55,6 +50,13 @@ protected:
 	void RotateLeft();
 	UFUNCTION(BlueprintCallable)
 	void RotateAround();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	
 	
 	void StartRotationTowardsDirection(const FVector& DirectionVector, float FallbackYawAmount);
 

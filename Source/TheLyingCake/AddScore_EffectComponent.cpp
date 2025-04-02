@@ -6,11 +6,9 @@
 //#include "ABP_GameMode.h"
 void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 {
-	Super::ApplyEffect(Actor);
 	if (Actor != nullptr)
 	{
 		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
-		
 		if (PlayerCharacter != nullptr)
 		{
 			int CurrentScore = PlayerCharacter->GetScore();
@@ -18,8 +16,10 @@ void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 			//ABP_GameMode* GameMode = GetWorld()->GetAuthGameMode<ABP_GameMode>();
 			//if (GameMode != nullptr)
 			//{
-				//GameMode->CheckWinCondition();
+			//GameMode->CheckWinCondition();
 			//}
 		}
 	}
+		
+	Super::ApplyEffect(Actor);
 }
