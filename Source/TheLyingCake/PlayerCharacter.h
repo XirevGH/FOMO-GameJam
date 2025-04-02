@@ -36,6 +36,9 @@ public:
 	int GetScore() const { return Score; }
 	void SetScore(const int ScoreToSet) {  Score = ScoreToSet; }
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsMoving() const { return bIsMoving; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -89,10 +92,10 @@ protected:
 	AMovementNode* FindBestNodeInDirection(const FVector& DirectionVector, float MinimumDotProduct) const;
 	
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* Mesh1P;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
 	
 	bool bIsInterpolating = false;
