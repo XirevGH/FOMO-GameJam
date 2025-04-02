@@ -17,7 +17,7 @@ void USwitchScore_EffectComponent::ApplyEffect(AActor* Actor)
 			//int otherPlayerScore = PlayerCharacter_2->GetScore();
 			//PlayerCharacter->SetScore( otherPlayerScore);
 			//PlayerCharacter_2->SetScore( tempSocre);
-			UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
+			//UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
 			
 			
 		}
