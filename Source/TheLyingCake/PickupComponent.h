@@ -27,7 +27,7 @@ private:
 		bool bFromSweep,
 		const FHitResult& SweepResult);
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category = "Effects", meta = (AllowPrivateAccess))
 	TSubclassOf<UEffectComponent> EffectClass;
 	
 };
