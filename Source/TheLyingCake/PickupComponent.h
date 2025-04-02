@@ -29,5 +29,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Effects", meta = (AllowPrivateAccess))
 	TSubclassOf<UEffectComponent> EffectClass;
+
+	UPROPERTY(EditAnywhere, Category="Effects")
+	UParticleSystem* PicUpParticle;
 	
 };

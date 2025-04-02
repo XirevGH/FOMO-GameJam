@@ -32,4 +32,10 @@ private:
 	AActor* PlayerOne;
 	UPROPERTY(EditAnywhere)
 	AActor* PlayerTwo;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf< UUserWidget> HUDClass;
+	UPROPERTY()
+	UUserWidget* HUD;
+	
 };

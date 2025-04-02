@@ -3,7 +3,7 @@
 
 #include "GameManager.h"
 #include "PlayerCharacter.h"
-
+#include "Blueprint/UserWidget.h"
 // Sets default values
 AGameManager::AGameManager()
 {
@@ -17,6 +17,11 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	HUD = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), HUDClass);
+	if (HUD != nullptr)
+	{
+		HUD->AddToViewport();
+	}
 }
 
 // Called every frame
