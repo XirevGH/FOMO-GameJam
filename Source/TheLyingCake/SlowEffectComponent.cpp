@@ -13,11 +13,12 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 	APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
 	EffectDuration = 5;
 	//Slow the player
-	//Player->SetSpeed(1);
+	Player->SetMovementSpeed(0.1);
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]()
 	{
 		//Player->SetSpeed(Player->StartSpeed);
 		// player effect or sound ?
+		//Player->SetMovementSpeed(0.1);
 		
 		this->DestroyComponent();
 	});

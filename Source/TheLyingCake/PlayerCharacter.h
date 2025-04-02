@@ -35,7 +35,10 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	int GetScore() const { return Score; }
 	void SetScore(const int ScoreToSet) {  Score = ScoreToSet; }
-
+	
+	float GetMovementSpeed() const { return MovementSpeed; }
+	void SetMovementSpeed(const float Speed) {  MovementSpeed = Speed; }
+	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsMoving() const { return bIsMoving; }
 
