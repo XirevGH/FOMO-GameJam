@@ -33,6 +33,8 @@ public:
 
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	int GetScore() const { return Score; }
+	void SetScore(const int ScoreToSet) {  Score = ScoreToSet; }
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsMoving() const { return bIsMoving; }
@@ -58,7 +60,7 @@ protected:
 	
 	bool bIsVisualRotating = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float RotationSpeed = 100.f;
+	float RotationSpeed;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Node System")
 	AMovementNode* CurrentNode;
@@ -82,9 +84,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Node System")
 	float ForwardVectorMatchThreshold = 0.707f; 
+
+	
 	
 	AMovementNode* FindNearestMovementNode() const;
-
+	
 	AMovementNode* FindBestNodeInDirection(const FVector& DirectionVector, float MinimumDotProduct) const;
 	
 private:
@@ -99,4 +103,7 @@ private:
 	float TotalInterpDuration = .5f; 
 	float EaseExponentRotation = 3.0f;
 	float EaseExponentLocation = 1.0f;
+
+	UPROPERTY(VisibleInstanceOnly, Category = "GamePlay")
+	int Score = 0;
 };

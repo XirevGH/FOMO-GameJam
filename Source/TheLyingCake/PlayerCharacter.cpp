@@ -78,7 +78,7 @@ void APlayerCharacter::Tick(float DeltaTime)
     if (bIsVisualRotating)
     {
         ElapsedInterpTime += DeltaTime;
-        float Alpha = FMath::Clamp(ElapsedInterpTime / TotalInterpDuration, 0.0f, 1.0f);
+        float Alpha = FMath::Clamp(ElapsedInterpTime / RotationSpeed, 0.0f, 1.0f);
         Alpha = FMath::InterpEaseInOut(0.0f, 1.f, Alpha, EaseExponentRotation);
         
         FQuat InterpQuat = FQuat::Slerp(InitialVisualQuatRotation, TargetVisualQuatRotation, Alpha);
@@ -109,7 +109,7 @@ void APlayerCharacter::Tick(float DeltaTime)
         FRotator RotationBeforeInterpolation = GetActorRotation();
 
         ElapsedInterpTime += DeltaTime;
-        float Alpha = FMath::Clamp(ElapsedInterpTime / TotalInterpDuration, 0.0f, 1.0f);
+        float Alpha = FMath::Clamp(ElapsedInterpTime / MovementSpeed, 0.0f, 1.0f);
         float LocationAlpha = FMath::InterpEaseInOut(0.0f, 0.5f, Alpha, EaseExponentLocation);
          
         FVector InterpLocation = FMath::Lerp(LocationBeforeInterpolation, TargetMoveLocation, LocationAlpha);

@@ -11,7 +11,7 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Display, TEXT("ApplyEffect: Slow"));
 	APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
-
+	EffectDuration = 5;
 	//Slow the player
 	//Player->SetSpeed(1);
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]()
