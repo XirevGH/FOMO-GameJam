@@ -77,5 +77,11 @@ public:
     // Call this function from your ACakePickup when it gets collected/destroyed.
     UFUNCTION(BlueprintCallable, Category = "Game State") // Optional: Expose to BP if needed
     void NotifyCakeCollected();
+    
+    // Returns the current number of cakes in the level
+    int32 GetCurrentCakeCount() const { return CurrentAmountCakes; }
+    
+    // Updates the cake count by directly counting all cake actors in the level
+    void UpdateActualCakeCount();
 
 };

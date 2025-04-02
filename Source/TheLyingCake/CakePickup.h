@@ -10,17 +10,25 @@ UCLASS()
 class THELYINGCAKE_API ACakePickup : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+    
+public:
 	ACakePickup();
-
+    
+	// Override the default collision function
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+    
 protected:
+	// Variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	bool bIsCollectable;
+    
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class USphereComponent* CollisionComponent;
+    
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class UStaticMeshComponent* CakeMeshComponent;
+    
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 };
+
