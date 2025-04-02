@@ -34,6 +34,9 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsMoving() const { return bIsMoving; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
