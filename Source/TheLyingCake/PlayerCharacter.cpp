@@ -81,8 +81,7 @@ void APlayerCharacter::Tick(float DeltaTime)
         Alpha = FMath::InterpEaseInOut(0.0f, 1.f, Alpha, EaseExponentRotation);
         
         FQuat InterpQuat = FQuat::Slerp(InitialVisualQuatRotation, TargetVisualQuatRotation, Alpha);
-
-        // Apply rotation
+        
         FRotator InterpRotation = InterpQuat.Rotator();
         SetActorRotation(InterpQuat);
         if (Controller)

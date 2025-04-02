@@ -77,7 +77,9 @@ protected:
 	FRotator TargetMoveRotation;
 	bool bIsMoving = false;
 
+	UPROPERTY()
 	AMovementNode* NextForwardNode = nullptr;
+	
 	FRotator TargetForwardRotation;
 	bool bShouldRotateToForwardNode = false;
 
