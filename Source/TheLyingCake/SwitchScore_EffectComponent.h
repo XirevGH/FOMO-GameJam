@@ -4,15 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "EffectComponent.h"
-#include "ReverseInput_EffectComponent.generated.h"
+#include "SwitchScore_EffectComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THELYINGCAKE_API UReverseInput_EffectComponent : public UEffectComponent
+class THELYINGCAKE_API USwitchScore_EffectComponent : public UEffectComponent
 {
 	GENERATED_BODY()
+
 public:
-	virtual void ApplyEffect(AActor* Actor) override;
+	void ApplyEffect(AActor* Actor) override;
 };

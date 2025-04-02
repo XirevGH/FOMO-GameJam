@@ -3,7 +3,7 @@
 
 #include "EffectComponent.h"
 #include "TimerManager.h"
-
+#include "PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UEffectComponent::UEffectComponent()
@@ -27,16 +27,13 @@ void UEffectComponent::BeginPlay()
 
 void UEffectComponent::ApplyEffect(AActor* Actor)
 {
-
+	//this->DestroyComponent();
 }
 
 
 // Called every frame
 void UEffectComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	FRotator a = GetOwner()->GetActorRotation();
-	
-	GetOwner()->SetActorRotation(a + FRotator(0,0,1));
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
