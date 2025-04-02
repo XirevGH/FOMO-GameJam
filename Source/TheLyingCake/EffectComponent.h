@@ -19,7 +19,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	 float EffectDuration{5};
+	 float EffectDuration{0};
 	 FTimerHandle EffectTimer;
 
 public:	
