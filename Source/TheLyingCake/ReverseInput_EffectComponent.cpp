@@ -3,12 +3,16 @@
 
 #include "ReverseInput_EffectComponent.h"
 #include "PlayerCharacter.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputAction.h"  // Required for handling input actions
+#include "InputMappingContext.h"
 
 void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 {
 	Super::ApplyEffect(Actor);
 
-	EffectDuration = 0;
+	EffectDuration = 2;
 	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Display, TEXT("ApplyEffect: Slow"));
@@ -18,18 +22,34 @@ void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 		if (PlayerCharacter != nullptr)
 		{
 			//reverse the input
-			float OriginalSpeed = PlayerCharacter->GetMovementSpeed();
+			APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
 			
-			UE_LOG(LogTemp, Warning, TEXT(""));
-			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, OriginalSpeed]()
+			if (PlayerController != nullptr)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("PlayerController work"));
+				APawn* ControlledPawn = PlayerController->GetPawn();
+				UInputComponent* InputComponent = ControlledPawn->InputComponent;
+				
+				if (InputComponent  != nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("InputComponent  work"));
 
-				//reset input
-				PlayerCharacter->SetMovementSpeed(OriginalSpeed);
-		
-				this->DestroyComponent();
-			});
-			GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+					
+					PlayerCharacter->ResetupPlayerInputComponent(InputComponent );
+			
+					FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, InputComponent ]()
+					{
+				
+						PlayerCharacter->SetupPlayerInputComponent(InputComponent );
+			
+						this->DestroyComponent();
+					});
+					GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+				}
+			}
+			
+			
+			
 		}
 	}
 	

@@ -18,7 +18,7 @@ UCLASS()
 class THELYINGCAKE_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
-	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* RotateRightAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -51,12 +51,14 @@ public:
 	void RotateLeft();
 	UFUNCTION(BlueprintCallable)
 	void RotateAround();
-
+	
+	void ResetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
+	
 	
 	
 	void StartRotationTowardsDirection(const FVector& DirectionVector, float FallbackYawAmount);
