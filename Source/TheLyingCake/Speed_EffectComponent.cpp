@@ -18,9 +18,8 @@ void USpeed_EffectComponent::ApplyEffect(AActor* Actor)
 		if (PlayerCharacter != nullptr)
 		{
 			//Slow the player
-			float OriginalSpeed = PlayerCharacter->GetMovementSpeed();
 			PlayerCharacter->SetSpeedwAmount(SpeedAmount) ;
-			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, OriginalSpeed]()
+			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter]()
 			{
 				//Player->SetSpeed(Player->StartSpeed);
 				// player effect or sound ?

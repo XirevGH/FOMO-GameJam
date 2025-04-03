@@ -7,7 +7,7 @@
 
 void USlowEffectComponent::ApplyEffect(AActor* Actor)
 {
-	EffectDuration = 5;
+	EffectDuration = 10;
 	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
@@ -17,9 +17,8 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 		if (PlayerCharacter != nullptr)
 		{
 			//Slow the player
-			float OriginalSpeed = PlayerCharacter->GetMovementSpeed();
 			PlayerCharacter->SetSlowAmount(SlowAmount) ;
-			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, OriginalSpeed]()
+			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter]()
 			{
 				//Player->SetSpeed(Player->StartSpeed);
 				// player effect or sound ?
