@@ -21,7 +21,7 @@ protected:
 	TSubclassOf<UEffectComponent> EffectClass;
 	
 	UPROPERTY(EditAnywhere, Category = "Pickup")
-	class UParticleSystem* PicUpParticle;
+	class UNiagaraSystem* PicUpParticle;
 	
 	void ApplyEffectToActor(AActor* ActorToApply);
 	

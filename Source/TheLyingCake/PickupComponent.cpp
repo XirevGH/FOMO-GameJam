@@ -6,7 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "CakeChaseGameMode.h"
-#include "Particles/ParticleSystemComponent.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 
 void UPickupComponent::BeginPlay()
 {
@@ -63,7 +64,7 @@ void UPickupComponent::OnPickup(UPrimitiveComponent* OverlappedComponent, AActor
     
     if (PicUpParticle)
     {
-        UGameplayStatics::SpawnEmitterAtLocation(
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(
             GetWorld(), 
             PicUpParticle, 
             GetOwner()->GetActorLocation(), 
