@@ -40,8 +40,14 @@ public:
 	void SetMovementSpeed(const float Speed) {  MovementSpeed = Speed; }
 	float GetBaseMovementSpeed() const { return BaseMovementSpeed; }
 	void SetSlowAmount(float S) { SlowAmount = S; }
+	AMovementNode* GetCurrentNode() const { return CurrentNode; }
+	void SetCurrentNode(AMovementNode* Node) { CurrentNode = Node; }
+	void SetIsMoving(bool bBool) { bIsMoving = bBool; }
+
 	UFUNCTION(BlueprintCallable)
 	bool GetIsMoving() const { return bIsMoving; }
+
+	
 	
 	UFUNCTION(BlueprintCallable)
 	void MoveForward();

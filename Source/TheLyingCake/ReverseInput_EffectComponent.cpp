@@ -3,10 +3,7 @@
 
 #include "ReverseInput_EffectComponent.h"
 #include "PlayerCharacter.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputAction.h"  // Required for handling input actions
-#include "InputMappingContext.h"
+
 
 void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 {
