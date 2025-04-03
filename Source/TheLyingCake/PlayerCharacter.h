@@ -89,7 +89,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float BaseMovementSpeed = 0.5;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float SlowAmount = 0.5;
+	float SlowAmount = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Node System")
 	float NodeReachedThreshold; 

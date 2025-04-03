@@ -18,10 +18,10 @@ void USwitchScore_EffectComponent::ApplyEffect(AActor* Actor)
 				APlayerCharacter* OtherPlayer = Cast<APlayerCharacter>(*ActorItr);
 				if (OtherPlayer != PlayerCharacter)
 				{
-					int TempSocre = PlayerCharacter->GetScore();
+					int TempScore = PlayerCharacter->GetScore();
 					int OtherPlayerScore = OtherPlayer->GetScore();
 					PlayerCharacter->SetScore( OtherPlayerScore);
-					OtherPlayer->SetScore( TempSocre);
+					OtherPlayer->SetScore( TempScore);
 					//UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
 					this->DestroyComponent();
 				}
