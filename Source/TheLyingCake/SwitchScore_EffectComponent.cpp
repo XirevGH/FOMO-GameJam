@@ -22,7 +22,7 @@ void USwitchScore_EffectComponent::ApplyEffect(AActor* Actor)
 					int OtherPlayerScore = OtherPlayer->GetScore();
 					PlayerCharacter->SetScore( OtherPlayerScore);
 					OtherPlayer->SetScore( TempSocre);
-					UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
+					//UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
 					this->DestroyComponent();
 				}
 			}
