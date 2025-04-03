@@ -33,7 +33,10 @@ public:
 
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	
+	UFUNCTION(BlueprintCallable)
 	int GetScore() const { return Score; }
+	
 	void SetScore(const int ScoreToSet) {  Score = ScoreToSet; }
 	
 	float GetMovementSpeed() const { return MovementSpeed; }
