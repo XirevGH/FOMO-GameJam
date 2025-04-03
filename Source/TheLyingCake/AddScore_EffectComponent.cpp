@@ -6,6 +6,7 @@
 //#include "ABP_GameMode.h"
 void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 {
+	Super::ApplyEffect(Actor);
 	if (Actor != nullptr)
 	{
 		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
@@ -18,8 +19,9 @@ void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 			//{
 			//GameMode->CheckWinCondition();
 			//}
+			this->DestroyComponent();
 		}
 	}
 		
-	Super::ApplyEffect(Actor);
+	
 }

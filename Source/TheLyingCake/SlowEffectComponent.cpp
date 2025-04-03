@@ -18,13 +18,13 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 		{
 			//Slow the player
 			float OriginalSpeed = PlayerCharacter->GetMovementSpeed();
-			PlayerCharacter->SetMovementSpeed(10);
+			PlayerCharacter->SetSlowAmount(SlowAmount) ;
 			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, OriginalSpeed]()
 			{
 				//Player->SetSpeed(Player->StartSpeed);
 				// player effect or sound ?
-				PlayerCharacter->SetMovementSpeed(OriginalSpeed);
-		
+				PlayerCharacter->SetSlowAmount(1) ;
+				
 				this->DestroyComponent();
 			});
 			GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);

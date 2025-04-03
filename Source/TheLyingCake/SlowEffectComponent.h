@@ -15,5 +15,8 @@ class THELYINGCAKE_API USlowEffectComponent : public UEffectComponent
 	GENERATED_BODY()
 public:
 	virtual void ApplyEffect(AActor* Actor) override;
+
+private:
+	float SlowAmount = 20;
 };
 

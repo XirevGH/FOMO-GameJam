@@ -38,7 +38,8 @@ public:
 	
 	float GetMovementSpeed() const { return MovementSpeed; }
 	void SetMovementSpeed(const float Speed) {  MovementSpeed = Speed; }
-	
+	float GetBaseMovementSpeed() const { return BaseMovementSpeed; }
+	void SetSlowAmount(float S) { SlowAmount = S; }
 	UFUNCTION(BlueprintCallable)
 	bool GetIsMoving() const { return bIsMoving; }
 	
@@ -85,7 +86,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MovementSpeed;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float BaseMovementSpeed = 0.5;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	float SlowAmount = 0.5;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Node System")
 	float NodeReachedThreshold; 
 

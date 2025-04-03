@@ -42,7 +42,7 @@ void APlayerCharacter::BeginPlay()
     Super::BeginPlay();
     
     UE_LOG(LogTemp, Warning, TEXT("Character BeginPlay Called"));
-   
+   MovementSpeed = BaseMovementSpeed;
     CurrentNode = FindNearestMovementNode();
     if (CurrentNode)
     {
@@ -73,7 +73,8 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    
+
+    MovementSpeed *= SlowAmount;
     if (bIsVisualRotating)
     {
         ElapsedInterpTime += DeltaTime;

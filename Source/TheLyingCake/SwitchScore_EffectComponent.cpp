@@ -3,24 +3,30 @@
 
 #include "SwitchScore_EffectComponent.h"
 #include "PlayerCharacter.h"
+#include "EngineUtils.h"
 
 void USwitchScore_EffectComponent::ApplyEffect(AActor* Actor)
 {
-	
+	Super::ApplyEffect(Actor);
 	if (Actor != nullptr)
 	{
 		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
 		if (PlayerCharacter != nullptr)
 		{
-			int tempSocre = PlayerCharacter->GetScore();
-			//GetWorld()->GetAuthGameMode()->getPl
-			//int otherPlayerScore = PlayerCharacter_2->GetScore();
-			//PlayerCharacter->SetScore( otherPlayerScore);
-			//PlayerCharacter_2->SetScore( tempSocre);
-			//UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
-			
-			
+			for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+			{
+				APlayerCharacter* OtherPlayer = Cast<APlayerCharacter>(*ActorItr);
+				if (OtherPlayer != PlayerCharacter)
+				{
+					int TempSocre = PlayerCharacter->GetScore();
+					int OtherPlayerScore = OtherPlayer->GetScore();
+					PlayerCharacter->SetScore( OtherPlayerScore);
+					OtherPlayer->SetScore( TempSocre);
+					UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
+					this->DestroyComponent();
+				}
+			}
 		}
 	}
-	Super::ApplyEffect(Actor);
+	
 }
