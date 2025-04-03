@@ -98,7 +98,7 @@ bool ACakeChaseGameMode::AttemptSpawnSingleCake()
             NodeLocation,
             CheckRadius,
             TArray<TEnumAsByte<EObjectTypeQuery>>(),
-            ACakePickup::StaticClass(),
+            AActor::StaticClass(),
             TArray<AActor*>(),
             OverlappingActors
         );
