@@ -1,13 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SlowEffectComponent.h"
+#include "Speed_EffectComponent.h"
+
 #include "PlayerCharacter.h"
 
 
-void USlowEffectComponent::ApplyEffect(AActor* Actor)
+void USpeed_EffectComponent::ApplyEffect(AActor* Actor)
 {
-	EffectDuration = 10;
+	EffectDuration = 5;
 	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
@@ -17,12 +18,12 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 		if (PlayerCharacter != nullptr)
 		{
 			//Slow the player
-			PlayerCharacter->SetSlowAmount(SlowAmount) ;
+			PlayerCharacter->SetSpeedwAmount(SpeedAmount) ;
 			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter]()
 			{
 				//Player->SetSpeed(Player->StartSpeed);
 				// player effect or sound ?
-				PlayerCharacter->SetSlowAmount(1) ;
+				PlayerCharacter->SetSpeedwAmount(1) ;
 				
 				this->DestroyComponent();
 			});

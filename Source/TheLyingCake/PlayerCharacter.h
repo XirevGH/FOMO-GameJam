@@ -33,13 +33,17 @@ public:
 
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	
+	UFUNCTION(BlueprintCallable)
 	int GetScore() const { return Score; }
+	
 	void SetScore(const int ScoreToSet) {  Score = ScoreToSet; }
 	
 	float GetMovementSpeed() const { return MovementSpeed; }
 	void SetMovementSpeed(const float Speed) {  MovementSpeed = Speed; }
 	float GetBaseMovementSpeed() const { return BaseMovementSpeed; }
 	void SetSlowAmount(float S) { SlowAmount = S; }
+	void SetSpeedwAmount(float S) { SpeedAmount = S; }
 	AMovementNode* GetCurrentNode() const { return CurrentNode; }
 	void SetCurrentNode(AMovementNode* Node) { CurrentNode = Node; }
 	void SetIsMoving(bool bBool) { bIsMoving = bBool; }
@@ -98,6 +102,8 @@ protected:
 	float BaseMovementSpeed = 0.5;
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	float SlowAmount = 1;
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	float SpeedAmount = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Node System")
 	float NodeReachedThreshold; 
