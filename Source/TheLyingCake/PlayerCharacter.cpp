@@ -74,7 +74,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    MovementSpeed = BaseMovementSpeed * SlowAmount;
+    MovementSpeed = (BaseMovementSpeed * SlowAmount)/ SpeedAmount;
     if (bIsVisualRotating)
     {
         ElapsedInterpTime += DeltaTime;
