@@ -56,4 +56,8 @@ public:
     int32 GetCurrentCakeCount() const { return CurrentAmountCakes; }
 
     void UpdateActualCakeCount();
+
+private:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+    float TimerTime = 180.f;
 };
