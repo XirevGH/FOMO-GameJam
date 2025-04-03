@@ -13,8 +13,5 @@ UCLASS()
 class THELYINGCAKE_API URandomTeleport_EffectComponent : public UEffectComponent
 {
 	GENERATED_BODY()
-
-public:
-	virtual void ApplyEffect(AActor* Actor) override;
 	
 };
