@@ -36,8 +36,4 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 			}
 		}
 	}
-	
-	
-	
-	
 }

@@ -3,6 +3,7 @@
 
 #include "AddScore_EffectComponent.h"
 #include "PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 //#include "ABP_GameMode.h"
 void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 {
@@ -19,6 +20,7 @@ void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 			//{
 			//GameMode->CheckWinCondition();
 			//}
+			
 			this->DestroyComponent();
 		}
 	}

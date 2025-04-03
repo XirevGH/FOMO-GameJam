@@ -71,6 +71,11 @@ void UPickupComponent::OnPickup(UPrimitiveComponent* OverlappedComponent, AActor
             GetOwner()->GetActorRotation()
         );
     }
+
+    if (SoundEffect)
+    {
+        UGameplayStatics::PlaySound2D(GetWorld(), SoundEffect);
+    }
     
     AActor* Owner = GetOwner();
     if (Owner && Owner->IsValidLowLevel())
