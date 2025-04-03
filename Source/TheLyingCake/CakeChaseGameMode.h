@@ -56,4 +56,5 @@ public:
     int32 GetCurrentCakeCount() const { return CurrentAmountCakes; }
 
     void UpdateActualCakeCount();
+
 };

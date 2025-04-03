@@ -8,7 +8,6 @@
 void ACakeChaseGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    
     UE_LOG(LogTemp, Warning, TEXT("CakeChaseGameMode BeginPlay started."));
     
     if (!CakeBP)
