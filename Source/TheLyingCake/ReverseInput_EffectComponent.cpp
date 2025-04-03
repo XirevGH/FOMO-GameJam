@@ -3,13 +3,13 @@
 
 #include "ReverseInput_EffectComponent.h"
 #include "PlayerCharacter.h"
-
+#include "EngineUtils.h"
 
 void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 {
 	Super::ApplyEffect(Actor);
 
-	EffectDuration = 2;
+	EffectDuration = 10;
 	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Display, TEXT("ApplyEffect: Slow"));
@@ -19,33 +19,41 @@ void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 		if (PlayerCharacter != nullptr)
 		{
 			//reverse the input
-			APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
-			
-			if (PlayerController != nullptr)
+			for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("PlayerController work"));
-				APawn* ControlledPawn = PlayerController->GetPawn();
-				UInputComponent* InputComponent = ControlledPawn->InputComponent;
-				
-				if (InputComponent  != nullptr)
+				APlayerCharacter* OtherPlayer = *ActorItr;
+				if (OtherPlayer != nullptr && OtherPlayer != PlayerCharacter)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("InputComponent  work"));
+
+					PlayerCharacter = Cast<APlayerCharacter>(OtherPlayer);
+
+					APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
+			
+					if (PlayerController != nullptr)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("PlayerController work"));
+						APawn* ControlledPawn = PlayerController->GetPawn();
+						UInputComponent* InputComponent = ControlledPawn->InputComponent;
+				
+						if (InputComponent  != nullptr)
+						{
+							UE_LOG(LogTemp, Warning, TEXT("InputComponent  work"));
 
 					
-					PlayerCharacter->ResetupPlayerInputComponent(InputComponent );
+							PlayerCharacter->ResetupPlayerInputComponent(InputComponent );
 			
-					FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, InputComponent ]()
-					{
+							FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, InputComponent ]()
+							{
 				
-						PlayerCharacter->SetupPlayerInputComponent(InputComponent );
+								PlayerCharacter->SetupPlayerInputComponent(InputComponent );
 			
-						this->DestroyComponent();
-					});
-					GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+								this->DestroyComponent();
+							});
+							GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+						}
+					}
 				}
 			}
-			
-			
 			
 		}
 	}
