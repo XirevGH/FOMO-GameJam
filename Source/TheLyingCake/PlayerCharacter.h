@@ -43,7 +43,7 @@ public:
 	void SetMovementSpeed(const float Speed) {  MovementSpeed = Speed; }
 	float GetBaseMovementSpeed() const { return BaseMovementSpeed; }
 	void SetSlowAmount(float S) { SlowAmount = S; }
-	void SetSpeedwAmount(float S) { SpeedAmount = S; }
+	void SetSpeedAmount(float S) { SpeedAmount = S; }
 	AMovementNode* GetCurrentNode() const { return CurrentNode; }
 	void SetCurrentNode(AMovementNode* Node) { CurrentNode = Node; }
 	void SetIsMoving(bool bBool) { bIsMoving = bBool; }
@@ -51,18 +51,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetIsMoving() const { return bIsMoving; }
 
-	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bHasInvertedInput = false;
+
 	UFUNCTION(BlueprintCallable)
+	void HandleForward();
+	UFUNCTION(BlueprintCallable)
+	void HandleRight();
+	UFUNCTION(BlueprintCallable)
+	void HandleLeft();
+	UFUNCTION(BlueprintCallable)
+	void HandleAround();
+	
 	void MoveForward();
-	UFUNCTION(BlueprintCallable)
 	void RotateRight();
-	UFUNCTION(BlueprintCallable)
 	void RotateLeft();
-	UFUNCTION(BlueprintCallable)
 	void RotateAround();
 	
-	void ResetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 protected:
 	virtual void BeginPlay() override;

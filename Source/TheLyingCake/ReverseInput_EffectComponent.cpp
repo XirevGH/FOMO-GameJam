@@ -42,21 +42,15 @@ void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
         return;
     }
     
-    UInputComponent* InputComponent = OpponentPlayer->InputComponent;
-    if (InputComponent == nullptr)
-    {
-        return;
-    }
-    
     // Reverse the opponent's inputs
-    OpponentPlayer->ResetupPlayerInputComponent(InputComponent);
+    OpponentPlayer->bHasInvertedInput = true;
     
     // Set timer to restore opponent's normal inputs after duration
-    FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([OpponentPlayer, InputComponent]()
+    FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([OpponentPlayer]()
     {
         if (OpponentPlayer)
         {
-            OpponentPlayer->SetupPlayerInputComponent(InputComponent);
+            OpponentPlayer->bHasInvertedInput = false;
         }
     });
     

@@ -127,27 +127,25 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf<AActor> Ac
 
     for (AActor* Node : MovementNodes)
     {
-        if (!Node) continue; // Skip invalid nodes
+        if (!Node) continue;
 
         FVector NodeLocation = Node->GetActorLocation();
-        OverlappingActors.Empty(); // Clear for next check
+        OverlappingActors.Empty();
 
         bool bIsOccupied = UKismetSystemLibrary::SphereOverlapActors(
             GetWorld(),
             NodeLocation,
             CheckRadius,
-            ObjectTypes,        // Object types to check against
-            AActor::StaticClass(), // Class filter (any actor)
-            TArray<AActor*>(),  // Actors to ignore (none)
-            OverlappingActors   // Output array
+            ObjectTypes,
+            AActor::StaticClass(),
+            TArray<AActor*>(),
+            OverlappingActors
         );
 
-        if (!bIsOccupied) // If the sphere overlap *didn't* find any actors
+        if (!bIsOccupied)
         {
             AvailableNodes.Add(Node);
         }
-        // Optional: Log if a node is occupied
-        // else { UE_LOG(LogTemp, VeryVerbose, TEXT("Node at %s is occupied."), *NodeLocation.ToString()); }
     }
 
     // --- Select Node and Spawn ---

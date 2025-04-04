@@ -168,27 +168,59 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     
     if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
     {
-        EnhancedInputComponent->ClearActionBindings();
-        EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
-        EnhancedInputComponent->BindAction(RotateRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RotateRight);
-        EnhancedInputComponent->BindAction(RotateLeftAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RotateLeft);
-        EnhancedInputComponent->BindAction(RotateAroundAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RotateAround);
+        EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &APlayerCharacter::HandleForward);
+        EnhancedInputComponent->BindAction(RotateRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::HandleRight);
+        EnhancedInputComponent->BindAction(RotateLeftAction, ETriggerEvent::Triggered, this, &APlayerCharacter::HandleLeft);
+        EnhancedInputComponent->BindAction(RotateAroundAction, ETriggerEvent::Triggered, this, &APlayerCharacter::HandleAround);
     }
 }
 
 
-void APlayerCharacter::ResetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APlayerCharacter::HandleForward()
 {
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-    
-    if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+    if (bHasInvertedInput)
     {
-       
-        EnhancedInputComponent->ClearActionBindings();
-        EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RotateAround);
-        EnhancedInputComponent->BindAction(RotateRightAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RotateLeft);
-        EnhancedInputComponent->BindAction(RotateLeftAction, ETriggerEvent::Triggered, this, &APlayerCharacter::RotateRight);
-        EnhancedInputComponent->BindAction(RotateAroundAction, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
+        RotateAround();
+    }
+    else
+    {
+        MoveForward();
+    }
+}
+
+void APlayerCharacter::HandleRight()
+{
+    if (bHasInvertedInput)
+    {
+        RotateLeft();
+    }
+    else
+    {
+        RotateRight();
+    }
+}
+
+void APlayerCharacter::HandleLeft()
+{
+    if (bHasInvertedInput)
+    {
+        RotateRight();
+    }
+    else
+    {
+        RotateLeft();
+    }
+}
+
+void APlayerCharacter::HandleAround()
+{
+    if (bHasInvertedInput)
+    {
+        MoveForward();
+    }
+    else
+    {
+        RotateAround();
     }
 }
 
