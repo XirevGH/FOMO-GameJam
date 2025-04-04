@@ -9,18 +9,29 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 {
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
-	if (Actor != nullptr)
+	if (Actor == nullptr)
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
-		if (PlayerCharacter != nullptr)
+		return;
+	}
+	
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
+	if (PlayerCharacter == nullptr)
+	{
+		return;
+	}
+	APlayerCharacter* OtherPlayer = nullptr;
+	for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		APlayerCharacter* CurrentPlayer = *ActorItr;
+		// Skip if null or if it's the triggering player
+		if (CurrentPlayer && CurrentPlayer != PlayerCharacter)
 		{
-			//Slow the player
-			for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-			{
-				APlayerCharacter* OtherPlayer = *ActorItr;
-				if (OtherPlayer != nullptr && OtherPlayer != PlayerCharacter)
-				{
-					OtherPlayer->SetSlowAmount(SlowAmount);
+			break; // Found the opponent, no need to continue loop
+		}
+	}
+	OtherPlayer->SetSlowAmount(SlowAmount);
+	//Slow the player
+			
 					FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, OtherPlayer]()
 					{
 						//Player->SetSpeed(Player->StartSpeed);
@@ -30,8 +41,8 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 						this->DestroyComponent();
 					});
 					GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
-				}
-			}
-		}
-	}
 }
+			
+		
+	
+
