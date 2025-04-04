@@ -132,4 +132,10 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, Category = "GamePlay")
 	int Score = 0;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* HitWallSOund;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* TurnSwooshSOund;
 };

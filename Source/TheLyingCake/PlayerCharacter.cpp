@@ -268,7 +268,7 @@ void APlayerCharacter::MoveForward()
     else
     {
         UE_LOG(LogTemp, Warning, TEXT("Move Forward: No valid node found in front. (Dead End?)"));
-        // TODO: Play a "bump" sound or visual feedback
+        UGameplayStatics::SpawnSoundAttached(HitWallSOund, Mesh1P);
     }
 }
 
@@ -337,6 +337,8 @@ void APlayerCharacter::StartRotationTowardsDirection(const FVector& DirectionVec
     TargetVisualQuatRotation.Normalize();
     ElapsedInterpTime = 0.0f;
     bIsVisualRotating = true;
+
+    UGameplayStatics::SpawnSoundAttached(TurnSwooshSOund, Mesh1P);
 }
 
 void APlayerCharacter::RotateRight()
