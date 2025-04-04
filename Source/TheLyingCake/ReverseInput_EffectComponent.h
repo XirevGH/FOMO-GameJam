@@ -15,4 +15,5 @@ class THELYINGCAKE_API UReverseInput_EffectComponent : public UEffectComponent
 	GENERATED_BODY()
 public:
 	virtual void ApplyEffect(AActor* Actor) override;
+	
 };

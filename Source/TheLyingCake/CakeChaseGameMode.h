@@ -122,4 +122,8 @@ protected:
 
     // Helper to find the configuration struct for a given power-up class.
     FPowerUpSpawnConfig* FindPowerUpConfig(TSubclassOf<APowerUp> PowerUpClass);
+
+private:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+    float TimerTime = 180.f;
 };
