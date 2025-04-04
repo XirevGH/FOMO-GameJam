@@ -7,51 +7,65 @@
 
 void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 {
-	Super::ApplyEffect(Actor);
-	UE_LOG(LogTemp, Display, TEXT("ApplyEffect: Slow"));
-	if (Actor != nullptr)
-	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
-		if (PlayerCharacter != nullptr)
-		{
-			//reverse the input
-			for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-			{
-				APlayerCharacter* OtherPlayer = *ActorItr;
-				if (OtherPlayer != nullptr && OtherPlayer != PlayerCharacter)
-				{
-
-					PlayerCharacter = Cast<APlayerCharacter>(OtherPlayer);
-
-					APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
-			
-					if (PlayerController != nullptr)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("PlayerController work"));
-						APawn* ControlledPawn = PlayerController->GetPawn();
-						UInputComponent* InputComponent = ControlledPawn->InputComponent;
-				
-						if (InputComponent  != nullptr)
-						{
-							UE_LOG(LogTemp, Warning, TEXT("InputComponent  work"));
-
-					
-							PlayerCharacter->ResetupPlayerInputComponent(InputComponent );
-			
-							FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, InputComponent ]()
-							{
-				
-								PlayerCharacter->SetupPlayerInputComponent(InputComponent );
-			
-								this->DestroyComponent();
-							});
-							GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
-						}
-					}
-				}
-			}
-			
-		}
-	}
-	
+    Super::ApplyEffect(Actor);
+    UE_LOG(LogTemp, Display, TEXT("ApplyEffect: ReverseInput"));
+    
+    // This is the player who triggered the power-up
+    APlayerCharacter* TriggeringPlayer = Cast<APlayerCharacter>(Actor);
+    if (TriggeringPlayer == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ReverseInput failed: Triggering actor is not a PlayerCharacter"));
+        return;
+    }
+    
+    // Find the opponent player (the one who didn't trigger the power-up)
+    APlayerCharacter* OpponentPlayer = nullptr;
+    
+    for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+    {
+        APlayerCharacter* CurrentPlayer = *ActorItr;
+        // Skip if null or if it's the triggering player
+        if (CurrentPlayer && CurrentPlayer != TriggeringPlayer)
+        {
+            OpponentPlayer = CurrentPlayer;
+            break; // Found the opponent, no need to continue loop
+        }
+    }
+    
+    if (OpponentPlayer == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ReverseInput failed: Could not find opponent player"));
+        return;
+    }
+    
+    UE_LOG(LogTemp, Warning, TEXT("Reversing inputs for opponent: %s"), *OpponentPlayer->GetName());
+    
+    APlayerController* OpponentController = Cast<APlayerController>(OpponentPlayer->GetController());
+    if (OpponentController == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Opponent has no controller, cannot reverse inputs"));
+        return;
+    }
+    
+    UInputComponent* InputComponent = OpponentPlayer->InputComponent;
+    if (InputComponent == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Opponent has no InputComponent, cannot reverse inputs"));
+        return;
+    }
+    
+    // Reverse the opponent's inputs
+    OpponentPlayer->ResetupPlayerInputComponent(InputComponent);
+    
+    // Set timer to restore opponent's normal inputs after duration
+    FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([OpponentPlayer, InputComponent]()
+    {
+        if (OpponentPlayer)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Restoring normal inputs for: %s"), *OpponentPlayer->GetName());
+            OpponentPlayer->SetupPlayerInputComponent(InputComponent);
+        }
+    });
+    
+    GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
 }
