@@ -37,15 +37,16 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 	OtherPlayer->SetSlowAmount(SlowAmount);
 	//Slow the player
 			
-					FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, OtherPlayer]()
-					{
-						//Player->SetSpeed(Player->StartSpeed);
-						// player effect or sound ?
-						OtherPlayer->SetSlowAmount(1) ;
-				
-						this->DestroyComponent();
-					});
-					GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, OtherPlayer]()
+	{
+		//Player->SetSpeed(Player->StartSpeed);
+		// player effect or sound ?
+		OtherPlayer->SetSlowAmount(1) ;
+		
+		this->DestroyComponent();
+	});
+	
+	GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
 }
 			
 		
