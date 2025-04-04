@@ -30,6 +30,10 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 			break; // Found the opponent, no need to continue loop
 		}
 	}
+	if (OtherPlayer == nullptr)
+	{
+		return;
+	}
 	OtherPlayer->SetSlowAmount(SlowAmount);
 	//Slow the player
 			
