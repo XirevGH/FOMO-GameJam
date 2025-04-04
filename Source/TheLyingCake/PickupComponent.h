@@ -23,6 +23,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Pickup")
 	class UNiagaraSystem* PicUpParticle;
 	
+	UPROPERTY(EditAnywhere, Category = "Pickup")
+	class USoundBase* SoundEffect;
+	
 	void ApplyEffectToActor(AActor* ActorToApply);
 	
 	UFUNCTION()

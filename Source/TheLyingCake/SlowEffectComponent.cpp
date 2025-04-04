@@ -3,11 +3,11 @@
 
 #include "SlowEffectComponent.h"
 #include "PlayerCharacter.h"
-
+#include "EngineUtils.h"
 
 void USlowEffectComponent::ApplyEffect(AActor* Actor)
 {
-	EffectDuration = 5;
+	EffectDuration = 10;
 	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
@@ -17,21 +17,23 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 		if (PlayerCharacter != nullptr)
 		{
 			//Slow the player
-			float OriginalSpeed = PlayerCharacter->GetMovementSpeed();
-			PlayerCharacter->SetSlowAmount(SlowAmount) ;
-			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter, OriginalSpeed]()
+			for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 			{
-				//Player->SetSpeed(Player->StartSpeed);
-				// player effect or sound ?
-				PlayerCharacter->SetSlowAmount(1) ;
+				APlayerCharacter* OtherPlayer = *ActorItr;
+				if (OtherPlayer != nullptr && OtherPlayer != PlayerCharacter)
+				{
+					OtherPlayer->SetSlowAmount(SlowAmount);
+					FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, OtherPlayer]()
+					{
+						//Player->SetSpeed(Player->StartSpeed);
+						// player effect or sound ?
+						OtherPlayer->SetSlowAmount(1) ;
 				
-				this->DestroyComponent();
-			});
-			GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+						this->DestroyComponent();
+					});
+					GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
+				}
+			}
 		}
 	}
-	
-	
-	
-	
 }
