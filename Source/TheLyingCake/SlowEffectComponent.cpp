@@ -26,6 +26,7 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 		// Skip if null or if it's the triggering player
 		if (CurrentPlayer && CurrentPlayer != PlayerCharacter)
 		{
+			OtherPlayer = Cast<APlayerCharacter>(CurrentPlayer);
 			break; // Found the opponent, no need to continue loop
 		}
 	}
