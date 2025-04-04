@@ -15,4 +15,8 @@ class THELYINGCAKE_API UBlackOut_EffectComponent : public UEffectComponent
 	GENERATED_BODY()
 public:
 	void ApplyEffect(AActor* Actor) override;
+protected:
+	//virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	
 };

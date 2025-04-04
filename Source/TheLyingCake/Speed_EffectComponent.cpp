@@ -8,8 +8,6 @@
 
 void USpeed_EffectComponent::ApplyEffect(AActor* Actor)
 {
-	EffectDuration = 5;
-	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
 	if (Actor != nullptr)

@@ -27,6 +27,7 @@ void UPickupComponent::ApplyEffectToActor(AActor* ActorToApply)
     if (Effect)
     {
         Effect->RegisterComponent();
+        Effect->SetEffectDuration(EffectDuration);
         Effect->ApplyEffect(ActorToApply);
     }
 }
