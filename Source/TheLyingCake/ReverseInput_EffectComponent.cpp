@@ -14,7 +14,6 @@ void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
     APlayerCharacter* TriggeringPlayer = Cast<APlayerCharacter>(Actor);
     if (TriggeringPlayer == nullptr)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ReverseInput failed: Triggering actor is not a PlayerCharacter"));
         return;
     }
     
@@ -34,23 +33,18 @@ void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
     
     if (OpponentPlayer == nullptr)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ReverseInput failed: Could not find opponent player"));
         return;
     }
-    
-    UE_LOG(LogTemp, Warning, TEXT("Reversing inputs for opponent: %s"), *OpponentPlayer->GetName());
     
     APlayerController* OpponentController = Cast<APlayerController>(OpponentPlayer->GetController());
     if (OpponentController == nullptr)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Opponent has no controller, cannot reverse inputs"));
         return;
     }
     
     UInputComponent* InputComponent = OpponentPlayer->InputComponent;
     if (InputComponent == nullptr)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Opponent has no InputComponent, cannot reverse inputs"));
         return;
     }
     
@@ -62,7 +56,6 @@ void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
     {
         if (OpponentPlayer)
         {
-            UE_LOG(LogTemp, Warning, TEXT("Restoring normal inputs for: %s"), *OpponentPlayer->GetName());
             OpponentPlayer->SetupPlayerInputComponent(InputComponent);
         }
     });
