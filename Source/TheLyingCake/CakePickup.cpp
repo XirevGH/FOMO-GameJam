@@ -13,10 +13,6 @@ ACakePickup::ACakePickup()
 	CollisionComponent->InitSphereRadius(50.0f);
 	CollisionComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 	CollisionComponent->SetGenerateOverlapEvents(true);
-	
-	CakeMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CakeMeshComponent"));
-	CakeMeshComponent->SetupAttachment(RootComponent);
-	CakeMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
     
 	bIsCollectable = true;
 }
