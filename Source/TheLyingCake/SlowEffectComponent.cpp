@@ -7,8 +7,6 @@
 
 void USlowEffectComponent::ApplyEffect(AActor* Actor)
 {
-	EffectDuration = 10;
-	
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
 	if (Actor != nullptr)

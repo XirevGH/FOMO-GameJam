@@ -16,6 +16,7 @@ UEffectComponent::UEffectComponent()
 }
 
 
+
 // Called when the game starts
 void UEffectComponent::BeginPlay()
 {

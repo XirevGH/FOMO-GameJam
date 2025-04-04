@@ -16,9 +16,12 @@ public:
 	// Sets default values for this component's properties
 	UEffectComponent();
 
+	void SetEffectDuration(float Second){ EffectDuration = Second; };
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
 	 float EffectDuration{0};
 	 FTimerHandle EffectTimer;
 

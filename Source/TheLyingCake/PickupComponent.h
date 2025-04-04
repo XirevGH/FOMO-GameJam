@@ -25,6 +25,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Pickup")
 	class USoundBase* SoundEffect;
+	UPROPERTY(EditAnywhere, Category = "Pickup" )
+	float EffectDuration{0};
 	
 	void ApplyEffectToActor(AActor* ActorToApply);
 	

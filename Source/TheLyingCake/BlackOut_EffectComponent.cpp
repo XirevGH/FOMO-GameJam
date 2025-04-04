@@ -9,10 +9,10 @@
 
 void UBlackOut_EffectComponent::ApplyEffect(AActor* Actor)
 {
+	UE_LOG(LogTemp, Warning, TEXT("EffectDuration: %f"), EffectDuration);
 	Super::ApplyEffect(Actor);
 	if (Actor != nullptr)
 	{
-		EffectDuration = 1;
 		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
 		if (PlayerCharacter != nullptr)
 		{

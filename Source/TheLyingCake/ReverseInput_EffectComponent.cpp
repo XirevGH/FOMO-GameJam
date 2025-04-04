@@ -8,10 +8,6 @@
 void UReverseInput_EffectComponent::ApplyEffect(AActor* Actor)
 {
 	Super::ApplyEffect(Actor);
-
-	EffectDuration = 10;
-	
-	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Display, TEXT("ApplyEffect: Slow"));
 	if (Actor != nullptr)
 	{
