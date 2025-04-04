@@ -28,5 +28,5 @@ void USwitchScore_EffectComponent::ApplyEffect(AActor* Actor)
 			}
 		}
 	}
-	this->DestroyComponent();
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]() { this->DestroyComponent(); });
 }
