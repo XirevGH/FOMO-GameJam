@@ -14,11 +14,6 @@ void UAddScore_EffectComponent::ApplyEffect(AActor* Actor)
 		{
 			int CurrentScore = PlayerCharacter->GetScore();
 			PlayerCharacter->SetScore(CurrentScore + ScoreToAdd);
-			//ABP_GameMode* GameMode = GetWorld()->GetAuthGameMode<ABP_GameMode>();
-			//if (GameMode != nullptr)
-			//{
-			//GameMode->CheckWinCondition();
-			//}
 			
 			this->DestroyComponent();
 		}
