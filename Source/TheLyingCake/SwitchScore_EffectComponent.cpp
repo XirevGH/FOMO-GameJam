@@ -8,25 +8,31 @@
 void USwitchScore_EffectComponent::ApplyEffect(AActor* Actor)
 {
 	Super::ApplyEffect(Actor);
-	if (Actor != nullptr)
+	if (Actor == nullptr)
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
-		if (PlayerCharacter != nullptr)
+		return;
+	}
+	
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
+	if (PlayerCharacter != nullptr)
+	{
+		return;
+	}
+	APlayerCharacter* OtherPlayer = nullptr;
+	for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		OtherPlayer = *ActorItr;
+		if (OtherPlayer != nullptr && OtherPlayer != PlayerCharacter)
 		{
-			for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-			{
-				APlayerCharacter* OtherPlayer = *ActorItr;
-				if (OtherPlayer != nullptr && OtherPlayer != PlayerCharacter)
-				{
-					int TempScore = PlayerCharacter->GetScore();
-					int OtherPlayerScore = OtherPlayer->GetScore();
-					PlayerCharacter->SetScore( OtherPlayerScore);
-					OtherPlayer->SetScore( TempScore);
-					//UE_LOG(LogTemp, Warning, TEXT("Player 1: %s Player 2 :"), *PlayerCharacter->GetName(),  );
-					
-				}
-			}
+			OtherPlayer = Cast<APlayerCharacter>(OtherPlayer);
+			break;
 		}
 	}
+	
+	int TempScore = PlayerCharacter->GetScore();
+	int OtherPlayerScore = OtherPlayer->GetScore();
+	PlayerCharacter->SetScore( OtherPlayerScore);
+	OtherPlayer->SetScore( TempScore);
+				
 	GetWorld()->GetTimerManager().SetTimerForNextTick([this]() { this->DestroyComponent(); });
 }

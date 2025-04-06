@@ -10,26 +10,29 @@ void USpeed_EffectComponent::ApplyEffect(AActor* Actor)
 {
 	Super::ApplyEffect(Actor);
 	UE_LOG(LogTemp, Warning, TEXT("ApplyEffect: Slow"));
-	if (Actor != nullptr)
+	if (Actor == nullptr)
 	{
-		APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
-		if (PlayerCharacter != nullptr)
-		{
-			//Slow the player
-			PlayerCharacter->SetSpeedAmount(SpeedAmount) ;
-			FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter]()
-			{
-				//Player->SetSpeed(Player->StartSpeed);
-				// player effect or sound ?
-				PlayerCharacter->SetSpeedAmount(1) ;
-				
-				this->DestroyComponent();
-			});
-			GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
-		}
+		return;
 	}
 	
-	
-	
-	
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Actor);
+	if (PlayerCharacter != nullptr)
+	{
+		return;
+	}
+			//Slow the player
+	PlayerCharacter->SetSpeedAmount(SpeedAmount) ;
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter]()
+	{
+		
+		PlayerCharacter->SetSpeedAmount(1) ;
+				
+		this->DestroyComponent();
+	});
+	GetOwner()->GetWorld()->GetTimerManager().SetTimer(EffectTimer, TimerDelegate, EffectDuration, false);
 }
+	
+	
+	
+	
+	
