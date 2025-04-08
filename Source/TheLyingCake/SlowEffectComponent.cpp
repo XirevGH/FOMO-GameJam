@@ -22,11 +22,11 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 	APlayerCharacter* OtherPlayer = nullptr;
 	for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
-		APlayerCharacter* CurrentPlayer = *ActorItr;
+		OtherPlayer = *ActorItr;
 		// Skip if null or if it's the triggering player
-		if (CurrentPlayer && CurrentPlayer != PlayerCharacter)
+		if (OtherPlayer && OtherPlayer != PlayerCharacter)
 		{
-			OtherPlayer = Cast<APlayerCharacter>(CurrentPlayer);
+			OtherPlayer = Cast<APlayerCharacter>(OtherPlayer);
 			break; // Found the opponent, no need to continue loop
 		}
 	}
@@ -34,9 +34,10 @@ void USlowEffectComponent::ApplyEffect(AActor* Actor)
 	{
 		return;
 	}
-	OtherPlayer->SetSlowAmount(SlowAmount);
+	
 	//Slow the player
-			
+	OtherPlayer->SetSlowAmount(SlowAmount);
+	
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, OtherPlayer]()
 	{
 		//Player->SetSpeed(Player->StartSpeed);
