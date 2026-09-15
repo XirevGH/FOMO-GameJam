@@ -33,15 +33,12 @@ APlayerCharacter::APlayerCharacter()
     bIsMoving = false;
     bIsVisualRotating = false;
 
-    UE_LOG(LogTemp, Warning, TEXT("Character Constructor Called"));
-    
 }
 
 void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
     
-    UE_LOG(LogTemp, Warning, TEXT("Character BeginPlay Called"));
    MovementSpeed = BaseMovementSpeed;
     CurrentNode = FindNearestMovementNode();
     if (CurrentNode)
@@ -62,11 +59,6 @@ void APlayerCharacter::BeginPlay()
         {
             Controller->SetControlRotation(StartRotation);
         }
-        UE_LOG(LogTemp, Log, TEXT("Player started at Node: %s"), *CurrentNode->GetName());
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Player could not find a starting Maze Node!"));
     }
 }
 
@@ -98,7 +90,6 @@ void APlayerCharacter::Tick(float DeltaTime)
             {
                 Controller->SetControlRotation(TargetVisualQuatRotation.Rotator());
             }
-            UE_LOG(LogTemp, Log, TEXT("Visual rotation complete. Final Rotation: %s"), *TargetVisualQuatRotation.Rotator().ToString());
         }
     }
 
@@ -237,8 +228,6 @@ void APlayerCharacter::MoveForward()
     FVector CurrentLocation = GetActorLocation();
     FVector PlayerForward = GetActorForwardVector();
 
-    UE_LOG(LogTemp, Log, TEXT("Attempting Move Forward from Node %s. Player Facing: %s"), *CurrentNode->GetName(), *PlayerForward.ToString());
-
     for (AMovementNode* ConnectedNode : CurrentNode->ConnectedNodes)
     {
         if (!ConnectedNode) continue;
@@ -248,8 +237,6 @@ void APlayerCharacter::MoveForward()
 
         DirectionToNode.Normalize();
         float DotProduct = FVector::DotProduct(PlayerForward, DirectionToNode);
-
-        UE_LOG(LogTemp, Verbose, TEXT("  Checking node %s. Direction: %s, Dot: %f"), *ConnectedNode->GetName(), *DirectionToNode.ToString(), DotProduct);
         
         if (DotProduct > BestDot && DotProduct >= ForwardVectorMatchThreshold)
         {
@@ -260,8 +247,6 @@ void APlayerCharacter::MoveForward()
     
     if (NextNode)
     {
-        UE_LOG(LogTemp, Log, TEXT("Found forward node: %s (Dot: %f). Starting Movement."), *NextNode->GetName(), BestDot);
-
         TargetNode = NextNode;
         TargetMoveLocation = TargetNode->GetActorLocation();
         
@@ -289,7 +274,6 @@ void APlayerCharacter::MoveForward()
                 
                 bShouldRotateToForwardNode = true;
                 
-                UE_LOG(LogTemp, Log, TEXT("Found next forward node: %s (Dot: %f)"), *NextForwardNode->GetName(), ForwardDot);
                 break;
             }
         }
@@ -299,7 +283,6 @@ void APlayerCharacter::MoveForward()
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("Move Forward: No valid node found in front. (Dead End?)"));
         UGameplayStatics::SpawnSoundAttached(HitWallSOund, Mesh1P);
     }
 }
@@ -323,8 +306,6 @@ AMovementNode* APlayerCharacter::FindBestNodeInDirection(const FVector& Directio
         DirectionToNode.Normalize();
         float DotProduct = FVector::DotProduct(DirectionVector, DirectionToNode);
         
-        UE_LOG(LogTemp, Verbose, TEXT("  Direction check for node %s. Direction: %s, Dot with requested: %f"), 
-               *ConnectedNode->GetName(), *DirectionToNode.ToString(), DotProduct);
         
         if (DotProduct > BestDot)
         {
@@ -340,7 +321,6 @@ void APlayerCharacter::StartRotationTowardsDirection(const FVector& DirectionVec
 {
     if (bIsMoving || bIsVisualRotating)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Cannot rotate: Currently moving or already rotating."));
         return;
     }
     
@@ -354,16 +334,11 @@ void APlayerCharacter::StartRotationTowardsDirection(const FVector& DirectionVec
         FRotator TargetRotation = DirectionToNode.Rotation();
         
         TargetVisualQuatRotation = TargetRotation.Quaternion();
-        
-        UE_LOG(LogTemp, Log, TEXT("Rotating towards node: %s at angle: %s"), 
-               *NodeInDirection->GetName(), *TargetRotation.ToString());
     }
     else
     {
         FQuat DeltaQuat = FQuat(FRotator(0.0f, FallbackYawAmount, 0.0f));
         TargetVisualQuatRotation = InitialVisualQuatRotation * DeltaQuat;
-        
-        UE_LOG(LogTemp, Log, TEXT("No node found in direction, using fallback rotation of %f degrees"), FallbackYawAmount);
     }
     
     TargetVisualQuatRotation.Normalize();

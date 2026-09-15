@@ -25,11 +25,11 @@ void URandomTeleport_EffectComponent::ApplyEffect(AActor* Actor)
 	for (TActorIterator<APlayerCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		OtherPlayer = *ActorItr;
-		// Skip if null or if it's the triggering player
+
 		if (OtherPlayer && OtherPlayer != PlayerCharacter)
 		{
 			OtherPlayer = Cast<APlayerCharacter>(OtherPlayer);
-			break; // Found the opponent, no need to continue loop
+			break;
 		}
 	}
 	
@@ -39,7 +39,6 @@ void URandomTeleport_EffectComponent::ApplyEffect(AActor* Actor)
 	}
 	OtherPlayer->SetIsMoving(false);
 	
-	//find node
 	TArray<AMovementNode*> NodeList;
 	for (TActorIterator<AMovementNode> NodeItr(GetWorld()); NodeItr; ++NodeItr)
 	{

@@ -40,6 +40,6 @@ void ACakePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		GameMode->NotifyCakeCollected();
 	}
-	//TODO: Add pickup sound
+
 	Destroy();
 }

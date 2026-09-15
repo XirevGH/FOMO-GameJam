@@ -20,7 +20,7 @@ void USpeed_EffectComponent::ApplyEffect(AActor* Actor)
 	{
 		return;
 	}
-			//Slow the player
+	
 	PlayerCharacter->SetSpeedAmount(SpeedAmount) ;
 	FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this, PlayerCharacter]()
 	{
